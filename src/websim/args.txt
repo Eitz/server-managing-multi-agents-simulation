@@ -1,0 +1,1 @@
+java jade.Boot -gui google:websim.agents.ServerAgent;Bob:websim.agents.UserAgent("google");Rich:websim.agents.UserAgent("google");Lewie:websim.agents.UserAgent("google");Tyler:websim.agents.UserAgent("google");X:websim.agents.UserAgent("google");X1:websim.agents.UserAgent("google");X2:websim.agents.UserAgent("google");X3:websim.agents.UserAgent("google")
