@@ -31,14 +31,14 @@ public class Computer implements Server {
     private void defineProcessorSpeed() {
         switch (specs) {
             case HIGH:
+                processorIncrementsMin = 0.1f;
+                processorIncrementsMax = 2f;
+            case MID:
                 processorIncrementsMin = 0.3f;
                 processorIncrementsMax = 3f;
-            case MID:
-                processorIncrementsMin = 0.5f;
-                processorIncrementsMax = 4f;
             case LOW:
-                processorIncrementsMin = 0.8f;
-                processorIncrementsMax = 6f;  
+                processorIncrementsMin = 0.5f;
+                processorIncrementsMax = 5f;  
         }
     }
 

@@ -3,6 +3,8 @@ package websim.agents.behaviours;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import websim.DevOpsWatcher;
 import websim.WebTask;
 import websim.agents.SiteAgent;
@@ -10,6 +12,7 @@ import websim.agents.SiteAgent;
 public class PeriodicSiteTasksBehaviour extends TickerBehaviour {
 
         SiteAgent agent;
+        Logger log = Logger.getLogger("websim");
         
         public PeriodicSiteTasksBehaviour(Agent a, int repeatMs) {
             super(a, repeatMs);
@@ -25,13 +28,28 @@ public class PeriodicSiteTasksBehaviour extends TickerBehaviour {
         }
         
         void printConsoleInfo() {
-            System.out.println("["+agent.consoleName()+"] Computer(s): " + agent.computer.toString());
-            System.out.println("["+agent.consoleName()+"] Processor usage: " + agent.computer.getProcessorUsage());
-            System.out.println("["+agent.consoleName()+"] Current users: " + agent.computer.getCurrentUsersCount());
-            System.out.println("["+agent.consoleName()+"] Current tasks: " + agent.computer.getTasksCount());
-            System.out.println("["+agent.consoleName()+"] Current devops watching: " + agent.devOpsWatchers.size());
-            for(DevOpsWatcher dow : agent.devOpsWatchers)
-                System.out.println("[ServerAgent("+ agent.getAID().getLocalName() +")]\t\t" + dow.toString());
+            String agentName = agent.consoleName();
+            String devOps = "";
+            devOps = agent.devOpsWatchers.stream().map((dow) -> dow.toString() + ",").reduce(devOps, String::concat);
+            log.log(
+                Level.FINE,
+                "[{0}]\n" +
+                "- Computer(s): {1}\n" +
+                "- Processor usage: {2}\n" + 
+                "- Current users: {3}\n" + 
+                "- Current tasks: {4}\n" + 
+                "- Current devops watching: {5}",
+                new Object[]{
+                    agentName,
+                    agent.computer.toString(),
+                    agent.computer.getProcessorUsage(),
+                    agent.computer.getCurrentUsersCount(),
+                    agent.computer.getTasksCount(),
+                    devOps
+                }
+            );
+            
+            
         }
         
         void checkForDevOpsAlerts() {

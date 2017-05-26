@@ -6,7 +6,7 @@ import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 import websim.agents.behaviours.GetDevOpsMessagesBehaviour;
 
-public class DevOpsAgent extends Agent {
+public class SecurityAgent extends Agent {
     String connectTo = "";
 
     void getArgs() {
@@ -27,11 +27,11 @@ public class DevOpsAgent extends Agent {
 
     public class RegisterWatchWebSiteBehaviour extends OneShotBehaviour {
         
-        DevOpsAgent agent;
+        SecurityAgent agent;
 
         private RegisterWatchWebSiteBehaviour(Agent a) {
             super(a);
-            agent = (DevOpsAgent) a;
+            agent = (SecurityAgent) a;
         }
 
         @Override
@@ -40,7 +40,7 @@ public class DevOpsAgent extends Agent {
             msg.addReceiver(new AID(agent.connectTo, AID.ISLOCALNAME));
             msg.setLanguage("ENGLISH");
             msg.setOntology("devops-processor-listener");
-            msg.setContent("15-90:20");
+            msg.setContent("30-50:3");
             agent.send(msg);
         }
     }

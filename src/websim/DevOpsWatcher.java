@@ -38,9 +38,6 @@ public class DevOpsWatcher {
             alert = "max";
         }
         
-        if (alert != null)
-            System.out.println("ALERT! " + alert);
-        
         if (alert != null && tick() >= maxTicks) {
             resetTicks();
             return alert;
