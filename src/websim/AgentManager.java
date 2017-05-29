@@ -38,8 +38,11 @@ public class AgentManager {
         try {
             addSite("Google");
             addDevOps("Google");
+            /*
             for (int i=0; i<100; i++)
                 addUser("Google");
+            */
+            addMaliciousUser("Google");
         } catch (StaleProxyException ex) {
             Logger.getLogger(AgentManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -83,8 +86,14 @@ public class AgentManager {
         agentController.start();
     }
     
-    void addDevOps(String connectTo) throws StaleProxyException {
+    void addMaliciousUser(String connectTo) throws StaleProxyException {
         String[] agentArgs = new String[] { connectTo };
+        AgentController agentController = myContainer.createNewAgent("MaliciousUser-" + userId++, "websim.agents.MaliciousUserAgent", agentArgs);
+        agentController.start();
+    }
+    
+    void addDevOps(String connectTo) throws StaleProxyException {
+        String[] agentArgs = new String[] { connectTo, "20-80:5" };
         AgentController agentController = myContainer.createNewAgent("DevOps-" + connectTo, "websim.agents.DevOpsAgent", agentArgs);
         agentController.start();
     }

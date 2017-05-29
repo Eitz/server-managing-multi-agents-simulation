@@ -8,11 +8,14 @@ import websim.agents.behaviours.GetDevOpsMessagesBehaviour;
 
 public class DevOpsAgent extends Agent {
     String connectTo = "";
+    String parameters = "20-80:5";
 
     void getArgs() {
         Object[] args = getArguments();
         if (args != null && args.length > 0) {
             connectTo = (String) args[0];
+            if (args[1] != null)
+                parameters = (String) args[1];
         } else {
             throw new Error("UserAgent must receive at least 1 website to connectTo!");
         }
@@ -40,7 +43,7 @@ public class DevOpsAgent extends Agent {
             msg.addReceiver(new AID(agent.connectTo, AID.ISLOCALNAME));
             msg.setLanguage("ENGLISH");
             msg.setOntology("devops-processor-listener");
-            msg.setContent("15-90:20");
+            msg.setContent(parameters);
             agent.send(msg);
         }
     }

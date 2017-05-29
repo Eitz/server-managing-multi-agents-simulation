@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import websim.Computer;
 import websim.DevOpsWatcher;
+import websim.Firewall;
 import websim.LoadBalancer;
 import websim.Server;
 import websim.agents.behaviours.GetSiteMessagesBehaviour;
@@ -17,11 +18,16 @@ import websim.agents.behaviours.PeriodicSiteTasksBehaviour;
 public class SiteAgent extends Agent {
     
     public Server computer = new Computer(Computer.ComputerSpecs.LOW);
+    public Firewall firewall = null;
     public int refreshTime = 2000;
     public List<DevOpsWatcher> devOpsWatchers = new ArrayList<>();
     
     public String consoleName() {
         return "ServerAgent("+ this.getAID().getLocalName() +")";
+    }
+    
+    public void addFirewall() {
+        firewall = new Firewall();
     }
     
     public boolean receiveTask(String user, String taskId) {              

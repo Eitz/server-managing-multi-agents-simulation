@@ -4,7 +4,6 @@ import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
-import java.util.Random;
 
 public class MaliciousUserAgent extends Agent {
     String connectTo = "";
@@ -17,16 +16,13 @@ public class MaliciousUserAgent extends Agent {
         } else {
             throw new Error("UserAgent must receive at least 1 website to connectTo!");
         }        
-        addBehaviour(new AccessWebsiteBehaviour(this, 1000));
+        addBehaviour(new AccessWebsiteBehaviour(this, 50));
     }
 
     private class AccessWebsiteBehaviour extends TickerBehaviour {
         
         boolean shouldAccessNow() {
-            Random rand = new Random();
-            // 1 in 5 times
-            int oneIn = 5;
-            return (rand.nextInt(oneIn)+1) == oneIn;
+            return true;
         }
         
         public AccessWebsiteBehaviour(Agent a, int repeatMs) {
@@ -35,10 +31,6 @@ public class MaliciousUserAgent extends Agent {
 
         @Override
         public void onTick() {
-            if (getTickCount() > new Random().nextInt(5000)){
-               doDelete();
-               return;
-            }
                 
             if (shouldAccessNow()) {
                 // System.out.println("[UserAgent("+ getLocalName() +")] I am accessing now!");

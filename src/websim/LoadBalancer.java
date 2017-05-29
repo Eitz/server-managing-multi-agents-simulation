@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -86,10 +87,15 @@ public class LoadBalancer implements Server {
 
     @Override
     public int getCurrentUsersCount() {
-        int currentUsersCount = 0;
-        for (Computer c : computers)
-            currentUsersCount += c.getCurrentUsersCount();
-        return currentUsersCount;
+        List<String> currentUsersNames = new ArrayList<>();
+        for (Computer c : computers) {
+            for (Map.Entry<String, List<WebTask>> entry : c.currentUsers.entrySet()) {
+                if (!currentUsersNames.contains(entry.getKey())){
+                    currentUsersNames.add(entry.getKey());
+                }
+            }
+        }
+        return currentUsersNames.size();
     }
 
     @Override

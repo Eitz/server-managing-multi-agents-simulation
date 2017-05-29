@@ -9,9 +9,11 @@
             <file>file:/home/eitz/NetBeansProjects/Jade_Trabalho/src/websim/agents/DevOpsAgent.java</file>
             <file>file:/home/eitz/NetBeansProjects/Jade_Trabalho/src/websim/Computer.java</file>
             <file>file:/home/eitz/NetBeansProjects/Jade_Trabalho/src/websim/AgentManager.java</file>
+            <file>file:/home/eitz/NetBeansProjects/Jade_Trabalho/src/websim/LoadBalancer.java</file>
             <file>file:/home/eitz/NetBeansProjects/Jade_Trabalho/src/websim/agents/SiteAgent.java</file>
             <file>file:/home/eitz/NetBeansProjects/Jade_Trabalho/src/websim/Main.java</file>
             <file>file:/home/eitz/NetBeansProjects/Jade_Trabalho/src/websim/agents/behaviours/PeriodicSiteTasksBehaviour.java</file>
+            <file>file:/home/eitz/NetBeansProjects/Jade_Trabalho/src/websim/Firewall.java</file>
             <file>file:/home/eitz/NetBeansProjects/Jade_Trabalho/src/websim/agents/UserAgent.java</file>
         </group>
     </open-files>
