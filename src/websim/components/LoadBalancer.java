@@ -3,11 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package websim;
+package websim.components;
 
+import websim.components.Server;
+import websim.components.WebTask;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -133,5 +136,22 @@ public class LoadBalancer implements Server {
     @Override
     public boolean isDegradable() {
         return true;
+    }
+
+    @Override
+    public Map<String, Integer> getUserTasksCount() {
+        Map<String, Integer> userTasksCount = new HashMap<>();
+        for (Computer computer : computers) {
+            Map<String, Integer> innerTasksCount = computer.getUserTasksCount();
+            for (Map.Entry<String, Integer> entry : innerTasksCount.entrySet()) {
+                int userTasks = entry.getValue();
+                String userName = entry.getKey();
+                if (userTasksCount.get(userName) == null)
+                    userTasksCount.put(userName, userTasks);
+                else
+                    userTasksCount.put(userName, userTasks + userTasksCount.get(userName));
+            }
+        }
+        return userTasksCount;
     }
 }

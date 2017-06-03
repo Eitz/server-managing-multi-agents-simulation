@@ -1,5 +1,7 @@
-package websim;
+package websim.components;
 
+import websim.components.Server;
+import websim.components.WebTask;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -26,6 +28,19 @@ public class Computer implements Server {
     public Computer(ComputerSpecs specs) {
         this.specs = specs;
         defineProcessorSpeed();
+    }
+    
+    @Override
+    public Map<String, Integer> getUserTasksCount() {
+        
+        Map<String, Integer> usersTasksCount = new HashMap<>();
+        
+        for (Map.Entry<String, List<WebTask>> user : currentUsers.entrySet()) {
+            List<WebTask> userTasks = user.getValue();
+            usersTasksCount.put(user.getKey(), userTasks.size());
+        }
+        
+        return usersTasksCount;
     }
     
     private void defineProcessorSpeed() {

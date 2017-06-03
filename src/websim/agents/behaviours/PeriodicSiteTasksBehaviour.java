@@ -5,8 +5,9 @@ import jade.core.behaviours.TickerBehaviour;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import websim.DevOpsWatcher;
-import websim.WebTask;
+import websim.components.DevOpsWatcher;
+import websim.components.SecurityWatcher;
+import websim.components.WebTask;
 import websim.agents.SiteAgent;
 
 public class PeriodicSiteTasksBehaviour extends TickerBehaviour {
@@ -24,6 +25,15 @@ public class PeriodicSiteTasksBehaviour extends TickerBehaviour {
             for (WebTask task : completedTasks) {
                 agent.answerTask(task, true);
                 agent.computer.removeTask(task);
+            }
+        }
+        
+        void checkForSecurityAlerts() {
+            for (SecurityWatcher watcher : agent.securityWatchers){
+                List<String> maliciousUsers = watcher.getAlerts(agent.computer);
+                for (String maliciousUser : maliciousUsers) {
+                    agent.informSecurityAgent(watcher, maliciousUser);
+                }
             }
         }
         
@@ -65,6 +75,7 @@ public class PeriodicSiteTasksBehaviour extends TickerBehaviour {
         public void onTick() {
             printConsoleInfo();
             checkForDevOpsAlerts();
+            checkForSecurityAlerts();
             checkForCompletedTasks();            
         }
     }

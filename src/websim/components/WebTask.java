@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package websim;
+package websim.components;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -40,7 +40,7 @@ public class WebTask {
         return taskMinimumMs + rand.nextInt((taskMaximumMs - taskMinimumMs) + 1);
     }
 
-    void setProcessorUsage(BigDecimal processorUsage) {
+    public void setProcessorUsage(BigDecimal processorUsage) {
         this.processorUsage = processorUsage;
     }
     

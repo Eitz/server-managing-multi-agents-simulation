@@ -1,6 +1,7 @@
 
-package websim;
+package websim.components;
 
+import websim.components.WebTask;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class Firewall {
             blockUsers.remove(user);
     }
     
-    public boolean checkIfOk(WebTask task) {
-        return ! blockUsers.contains(task.user);
+    public boolean checkIfOk(String user) {
+        return ! blockUsers.contains(user);
     }
 }

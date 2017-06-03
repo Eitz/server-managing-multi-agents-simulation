@@ -1,17 +1,18 @@
 package websim.agents;
 
 import jade.core.AID;
-import websim.WebTask;
+import websim.components.WebTask;
 
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
 import java.util.ArrayList;
 import java.util.List;
-import websim.Computer;
-import websim.DevOpsWatcher;
-import websim.Firewall;
-import websim.LoadBalancer;
-import websim.Server;
+import websim.components.Computer;
+import websim.components.DevOpsWatcher;
+import websim.components.Firewall;
+import websim.components.LoadBalancer;
+import websim.components.SecurityWatcher;
+import websim.components.Server;
 import websim.agents.behaviours.GetSiteMessagesBehaviour;
 import websim.agents.behaviours.PeriodicSiteTasksBehaviour;
 
@@ -21,6 +22,7 @@ public class SiteAgent extends Agent {
     public Firewall firewall = null;
     public int refreshTime = 2000;
     public List<DevOpsWatcher> devOpsWatchers = new ArrayList<>();
+    public List<SecurityWatcher> securityWatchers = new ArrayList<>();
     
     public String consoleName() {
         return "ServerAgent("+ this.getAID().getLocalName() +")";
@@ -32,7 +34,10 @@ public class SiteAgent extends Agent {
     
     public boolean receiveTask(String user, String taskId) {              
         WebTask newTask = new WebTask(user, taskId);
-        return computer.addTask(newTask);
+        if (firewall.checkIfOk(user))
+            return computer.addTask(newTask);
+        else
+            return false;
     }
     
     public void answerTask(WebTask task, boolean allGood) {
@@ -44,8 +49,13 @@ public class SiteAgent extends Agent {
         this.send(msg);
     }
     
-    public void setDevOpsWatcher(DevOpsWatcher devOpsWatcher) {
+    public void addDevOpsWatcher(DevOpsWatcher devOpsWatcher) {
         devOpsWatchers.add(devOpsWatcher);
+    }
+    
+    public void addSecurityWatcher(SecurityWatcher secWatcher) {
+        addFirewall();
+        securityWatchers.add(secWatcher);
     }
     
     public void informDevOps(DevOpsWatcher devOpsWatcher, String limit) {
@@ -61,7 +71,6 @@ public class SiteAgent extends Agent {
     }
     
     public void performDevOpsAction(String action) {
-        System.out.println("Action --> " + action);
         if (action.equals("upgrade")) {
             boolean successUpgrade = computer.upgrade();
             
@@ -77,6 +86,30 @@ public class SiteAgent extends Agent {
             if (!successDegrade && computer.isCluster()){
                 computer = new Computer(Computer.ComputerSpecs.HIGH);
             }
+        }
+    }
+    
+    public void informSecurityAgent(SecurityWatcher secWatcher, String maliciousUser) {
+        ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+        msg.addReceiver(new AID(secWatcher.getName(), AID.ISLOCALNAME));
+        msg.setLanguage("ENGLISH");
+        // String ontology = computer.isCluster() ? "devops-alert-cluster" : "devops-alert-server";
+        String ontology = "security-server-alert";
+        msg.setOntology(ontology);
+        msg.setContent(maliciousUser);
+        this.send(msg);
+        System.out.println("SecurityAgent informed: ("+ maliciousUser +")" + secWatcher.getName());
+    }
+    
+    public void performSecurityAction(String action, String user) {
+        System.out.println("SECURITY --> " + action);
+        System.out.println("Action --> " + action);
+        if (action.equals("ban")) {
+            firewall.addRuleBlockUser(user);
+            // FIX HERE: add task failed to all tasks of this user
+        }
+        if (action.equals("unban")) {
+            firewall.removeRuleBlockUser(user);
         }
     }
     

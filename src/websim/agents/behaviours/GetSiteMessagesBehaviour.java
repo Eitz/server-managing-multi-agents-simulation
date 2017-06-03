@@ -4,7 +4,8 @@ import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import java.math.BigDecimal;
-import websim.DevOpsWatcher;
+import websim.components.DevOpsWatcher;
+import websim.components.SecurityWatcher;
 import websim.agents.SiteAgent;
 
 public class GetSiteMessagesBehaviour extends CyclicBehaviour {
@@ -34,6 +35,12 @@ public class GetSiteMessagesBehaviour extends CyclicBehaviour {
                 break;
             case "devops-alter-computer":
                 handleDevOpsAlterComputer(msg);
+                break;
+            case "security-access-listener":
+                handleSecurityListener(msg);        
+                break;
+            case "security-add-firewall-rule":
+                handleSecurityRule(msg);
                 break;
             default:
                 break;
@@ -80,7 +87,7 @@ public class GetSiteMessagesBehaviour extends CyclicBehaviour {
         BigDecimal max = new BigDecimal(minMax[1]);
 
         DevOpsWatcher watcher = new DevOpsWatcher(msg.getSender().getLocalName(), min, max, ticks);
-        agent.setDevOpsWatcher(watcher);
+        agent.addDevOpsWatcher(watcher);
 
         ACLMessage reply = msg.createReply();
         reply.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
@@ -88,4 +95,38 @@ public class GetSiteMessagesBehaviour extends CyclicBehaviour {
         reply.setContent("1");
         agent.send(reply);
     }
+    
+    // the message: min-max:ticks
+    // Min is the minimum processor usage to inform
+    // Max is the maximum processor usage to inform
+    // ticks is the time of repetitions when to inform
+    void handleSecurityListener(ACLMessage msg) {
+
+        int maxSimultaneousTask = Integer.parseInt(msg.getContent());
+
+        SecurityWatcher watcher = new SecurityWatcher(msg.getSender().getLocalName(), maxSimultaneousTask);
+        agent.addSecurityWatcher(watcher);
+
+        ACLMessage reply = msg.createReply();
+        reply.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+        reply.setOntology(msg.getOntology());
+        reply.setContent("1");
+        agent.send(reply);
+    }
+    
+    
+    void handleSecurityRule(ACLMessage msg) {
+
+        String[] splittedMessage = msg.getContent().split(":");
+        String action = splittedMessage[0];
+        String user = splittedMessage[1];
+        agent.performSecurityAction(action, user);
+
+        ACLMessage reply = msg.createReply();
+        reply.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+        reply.setOntology(msg.getOntology());
+        reply.setContent("1");
+        agent.send(reply);
+    }
+    
 }
