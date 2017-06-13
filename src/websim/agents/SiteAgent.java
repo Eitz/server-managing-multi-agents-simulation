@@ -15,8 +15,12 @@ import websim.components.SecurityWatcher;
 import websim.components.Server;
 import websim.agents.behaviours.GetSiteMessagesBehaviour;
 import websim.agents.behaviours.PeriodicSiteTasksBehaviour;
+import websim.graphics.SitePanelGraphic;
+import websim.ui.UIManager;
 
 public class SiteAgent extends Agent {
+
+    public SitePanelGraphic sitePanel;
     
     public Server computer = new Computer(Computer.ComputerSpecs.LOW);
     public Firewall firewall = null;
@@ -117,5 +121,7 @@ public class SiteAgent extends Agent {
     protected void setup () {
         addBehaviour(new GetSiteMessagesBehaviour(this));
         addBehaviour(new PeriodicSiteTasksBehaviour(this, refreshTime));
+        sitePanel = new SitePanelGraphic(this);
+        UIManager.getInstance().addSite(sitePanel);
     }
 }

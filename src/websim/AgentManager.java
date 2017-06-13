@@ -1,6 +1,5 @@
 package websim;
 
-import jade.Boot;
 import jade.core.Profile;
 import jade.core.Runtime;
 import jade.core.ProfileImpl;
@@ -8,15 +7,10 @@ import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import websim.agents.DevOpsAgent;
-import websim.agents.MaliciousUserAgent;
-import websim.agents.SecurityAgent;
-import websim.agents.SiteAgent;
-import websim.agents.UserAgent;
 
 public class AgentManager {
     
@@ -24,85 +18,85 @@ public class AgentManager {
     AgentContainer myContainer;
     
     int userId = 1;
-    List<UserAgent> users;
-    List<SiteAgent> sites;
-    List<DevOpsAgent> devOps;
-    List<SecurityAgent> securityAgents;
-    List<MaliciousUserAgent> maliciousUsers;
+    List<String> sites;
     
     void setup(boolean showGui) {
-        prepareVariables();
+        
+        sites = new ArrayList<>();
         
         this.initJade(showGui);
         
+        
+        addSite("Google.com");
+        addDevOps("Google.com");
+            
+        for (int i=0; i<100; i++)
+            addUser("Google.com");
+            
+        addMaliciousUser("Google.com");
+        addSecurityAgent("Google.com");
+        
+        addSite("Yahoo.com");
+        addDevOps("Yahoo.com");
+            
+        for (int i=0; i<100; i++)
+            addUser("Yahoo.com");
+            
+        addMaliciousUser("Yahoo.com");
+        addSecurityAgent("Yahoo.com");
+    }
+    
+    void initJade(boolean showGui) {
+        jadeRuntime = Runtime.instance();
+        Profile profile = new ProfileImpl();
+        profile.setParameter(Profile.CONTAINER_NAME, "WebSim");
+        profile.setParameter(Profile.MAIN_HOST, "localhost");
+        profile.setParameter(Profile.GUI, showGui ? "true" : "false");
+        myContainer = jadeRuntime.createMainContainer(profile);
+    }
+   
+    public void addAgent(String name, String agent) {
+        addAgent(name, agent, null);
+    }
+    
+    public void addAgent(String name, String agent, String[] args) {
         try {
-            addSite("Google");
-            addDevOps("Google");
-            
-            for (int i=0; i<100; i++)
-                addUser("Google");
-            
-            addMaliciousUser("Google");
-            addSecurityAgent("Google");
+            AgentController agentController = myContainer.createNewAgent(name, agent, args);
+            agentController.start();
         } catch (StaleProxyException ex) {
             Logger.getLogger(AgentManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-       
-    private void prepareVariables() {
-        users = new LinkedList<>();
-        sites = new ArrayList<>();
-        devOps = new ArrayList<>();
-        securityAgents = new ArrayList<>();
-        maliciousUsers = new LinkedList<>();
+    
+    public void addSite(String site) {
+        sites.add(site);
+        addAgent(site, "websim.agents.SiteAgent");
     }
     
-    void initJade(boolean showGui) {
-        
-        String[] param = new String[ 1 ];
-        if (showGui)
-            param[ 0 ] = "-gui";
-        Boot.main( param );
-        jadeRuntime = Runtime.instance();
-        createContainer();
-    }
-    
-    private void createContainer() {
-        Profile profile = new ProfileImpl();
-        profile.setParameter(Profile.CONTAINER_NAME, "MyContainer");
-        profile.setParameter(Profile.MAIN_HOST, "localhost");
-        myContainer = jadeRuntime.createAgentContainer(profile);
-    }
-    
-    
-    
-    void addSite(String site) throws StaleProxyException {
-        AgentController agentController = myContainer.createNewAgent(site, "websim.agents.SiteAgent", null);
-        agentController.start();
-    }
-    
-    void addUser(String connectTo) throws StaleProxyException {
+    public void addUser(String connectTo) {
         String[] agentArgs = new String[] { connectTo };
-        AgentController agentController = myContainer.createNewAgent("User-" + userId++, "websim.agents.UserAgent", agentArgs);
-        agentController.start();
+        addAgent("User-" + userId++, "websim.agents.UserAgent", agentArgs);
     }
     
-    void addMaliciousUser(String connectTo) throws StaleProxyException {
+    void addMaliciousUser(String connectTo) {
         String[] agentArgs = new String[] { connectTo };
-        AgentController agentController = myContainer.createNewAgent("MaliciousUser-" + userId++, "websim.agents.MaliciousUserAgent", agentArgs);
-        agentController.start();
+        addAgent("MaliciousUser-" + userId++, "websim.agents.MaliciousUserAgent", agentArgs);        
     }
     
-    void addDevOps(String connectTo) throws StaleProxyException {
+    void addDevOps(String connectTo) {
         String[] agentArgs = new String[] { connectTo, "20-80:5" };
-        AgentController agentController = myContainer.createNewAgent("DevOps-" + connectTo, "websim.agents.DevOpsAgent", agentArgs);
-        agentController.start();
+        addAgent("DevOps-" + connectTo, "websim.agents.DevOpsAgent", agentArgs);
     }
     
-    void addSecurityAgent(String connectTo) throws StaleProxyException {
+    void addSecurityAgent(String connectTo) {
         String[] agentArgs = new String[] { connectTo, "20" };
-        AgentController agentController = myContainer.createNewAgent("SecurityAgent-" + connectTo, "websim.agents.SecurityAgent", agentArgs);
-        agentController.start();
+        addAgent("SecurityAgent-" + connectTo, "websim.agents.SecurityAgent", agentArgs);
+    }
+
+    public void addUser() {
+        Random rand = new Random();
+        String site = sites.get(rand.nextInt(sites.size()));
+        addUser(site);
     }
 
     
