@@ -22,19 +22,19 @@ public class SitePanelGraphic extends JPanel {
     SiteAgent agent;
     TitlePanel title;
     
-    BlockPanel stats;
-    BlockPanel console;
-    BlockPanel machines;
-    BlockPanel agents;
-    BlockPanel applications;
-    BlockPanel users;
-    BlockPanel log;
+    public StatsPanel stats;
+    public ConsolePanel console;
+    public BlockPanel machines;
+    public BlockPanel agents;
+    public BlockPanel applications;
+    public BlockPanel users;
+    public BlockPanel log;
     
     public SitePanelGraphic(SiteAgent myAgent) {
         this.agent = myAgent;
         setSize(new Dimension(600, 700));
         setLayout(null);
-        setBackground(Color.blue);
+        setBackground(Color.DARK_GRAY);
         prepareTitle();
         prepareBlocks();        
         
@@ -45,7 +45,7 @@ public class SitePanelGraphic extends JPanel {
         title.setBounds(0, 0, getWidth(), 55);
         add(title);
     }
-
+    
     private void prepareBlocks() {
         
         JPanel wrapper = new JPanel();
@@ -57,17 +57,12 @@ public class SitePanelGraphic extends JPanel {
         stats.setBounds(0, 0, 300, 150);
         wrapper.add(stats);
         
-        console = new StatsPanel();
-        console.setBounds(300, 0, 300, 150);
+        console = new ConsolePanel();
+        console.setBounds(300, 0, 300, 300);
         wrapper.add(console);
         
-        
-        machines = new StatsPanel();
-        machines.setBounds(0, 150, 300, 150);
-        wrapper.add(machines);
-        
         agents = new StatsPanel();
-        agents.setBounds(300, 150, 300, 150);
+        agents.setBounds(0, 150, 300, 150);
         wrapper.add(agents);
         
         applications = new StatsPanel();

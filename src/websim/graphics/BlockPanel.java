@@ -36,16 +36,15 @@ public class BlockPanel extends JPanel {
     final void prepare() {
         setLayout(null);
         setSize(new Dimension(290, 150));
-        setBackground(Color.green);
-        setBorder(BorderFactory.createLineBorder(Color.yellow));
+        setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 8, true));
+        setBackground(Color.white);
     }
     
     final void prepareTitle() {
-        titleLabel = new JLabel(this.title);
+        titleLabel = new JLabel(" " + this.title);
         titleLabel.setFont(new Font("sans", Font.BOLD, 20));
         titleLabel.setForeground(Color.darkGray);
-        titleLabel.setBounds(0, 0, 300, 40);
-        titleLabel.setBackground(Color.black);
+        titleLabel.setBounds(10, 10, 280, 40);
         add(titleLabel);
     }
 }

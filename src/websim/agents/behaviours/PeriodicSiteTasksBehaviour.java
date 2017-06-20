@@ -37,6 +37,11 @@ public class PeriodicSiteTasksBehaviour extends TickerBehaviour {
             }
         }
         
+        void updateInterface() {
+            agent.sitePanel.stats.setTasksCount(agent.computer.getTasksCount());            
+            agent.sitePanel.console.setComputerInformation(agent.computer.getServerInformation());
+        }
+        
         void printConsoleInfo() {
             String agentName = agent.consoleName();
             String devOps = "";
@@ -74,6 +79,7 @@ public class PeriodicSiteTasksBehaviour extends TickerBehaviour {
         @Override
         public void onTick() {
             printConsoleInfo();
+            updateInterface();
             checkForDevOpsAlerts();
             checkForSecurityAlerts();
             checkForCompletedTasks();            

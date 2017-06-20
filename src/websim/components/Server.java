@@ -1,11 +1,11 @@
 package websim.components;
 
-import websim.components.WebTask;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
 public interface Server {
+    
     public boolean addTask(WebTask task);
     
     public boolean hasTask(WebTask task);
@@ -27,4 +27,6 @@ public interface Server {
     public boolean degrade();
 
     public Map<String, Integer> getUserTasksCount();
+    
+    public ServerInformation[] getServerInformation();
 }

@@ -22,14 +22,14 @@ public class SiteAgent extends Agent {
 
     public SitePanelGraphic sitePanel;
     
-    public Server computer = new Computer(Computer.ComputerSpecs.LOW);
+    public Server computer = new Computer(Computer.ComputerSpecs.i3);
     public Firewall firewall = null;
     public int refreshTime = 2000;
     public List<DevOpsWatcher> devOpsWatchers = new ArrayList<>();
     public List<SecurityWatcher> securityWatchers = new ArrayList<>();
     
     public String consoleName() {
-        return "ServerAgent("+ this.getAID().getLocalName() +")";
+        return "SiteAgent("+ this.getAID().getLocalName() +")";
     }
     
     public void addFirewall() {
@@ -88,7 +88,7 @@ public class SiteAgent extends Agent {
             // FIX HERE, send task-failed to all users in the degraded computer
             boolean successDegrade = computer.degrade();
             if (!successDegrade && computer.isCluster()){
-                computer = new Computer(Computer.ComputerSpecs.HIGH);
+                computer = new Computer(Computer.ComputerSpecs.i7);
             }
         }
     }

@@ -1,7 +1,5 @@
 package websim.components;
 
-import websim.components.Server;
-import websim.components.WebTask;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -14,9 +12,9 @@ import java.util.Random;
 public class Computer implements Server {
 
     public enum ComputerSpecs {
-        LOW,
-        MID,
-        HIGH
+        i3,
+        i5,
+        i7
     }
     
     BigDecimal processorUsage = new BigDecimal(0).setScale(2, RoundingMode.HALF_EVEN);
@@ -45,13 +43,13 @@ public class Computer implements Server {
     
     private void defineProcessorSpeed() {
         switch (specs) {
-            case HIGH:
+            case i7:
                 processorIncrementsMin = 0.1f;
                 processorIncrementsMax = 2f;
-            case MID:
+            case i5:
                 processorIncrementsMin = 0.3f;
                 processorIncrementsMax = 3f;
-            case LOW:
+            case i3:
                 processorIncrementsMin = 0.5f;
                 processorIncrementsMax = 5f;  
         }
@@ -148,13 +146,13 @@ public class Computer implements Server {
     @Override
     public boolean upgrade() {
         switch (specs) {
-            case LOW:
-                specs = ComputerSpecs.MID;
+            case i3:
+                specs = ComputerSpecs.i5;
                 break;            
-            case MID:
-                specs = ComputerSpecs.HIGH;
+            case i5:
+                specs = ComputerSpecs.i7;
                 break;
-            case HIGH:
+            case i7:
                 return false;
         }
         defineProcessorSpeed();
@@ -164,13 +162,13 @@ public class Computer implements Server {
     @Override
     public boolean degrade() {
         switch (specs) {
-            case HIGH:
-                specs = ComputerSpecs.MID;
+            case i7:
+                specs = ComputerSpecs.i5;
                 break;
-            case MID:
-                specs = ComputerSpecs.LOW;
+            case i5:
+                specs = ComputerSpecs.i3;
                 break;
-            case LOW:
+            case i3:
                 return false;
          
         }
@@ -190,7 +188,12 @@ public class Computer implements Server {
     
     @Override
     public boolean isDegradable() {
-        return specs != ComputerSpecs.LOW;
+        return specs != ComputerSpecs.i3;
+    }
+    
+    @Override
+    public ServerInformation[] getServerInformation() {
+        return new ServerInformation[] { new ServerInformation(this.specs.name(), this.processorUsage) };
     }
     
 }

@@ -26,7 +26,7 @@ public final class TitlePanel extends JPanel {
     public TitlePanel(String site) {
         this.site = site;
         setLayout(null);
-        
+        setBackground(Color.LIGHT_GRAY);
         prepareTitle();
         prepareSubtitle();
         prepareStatus();        
@@ -42,18 +42,18 @@ public final class TitlePanel extends JPanel {
     void prepareTitle() {
         title = new JLabel(this.site);
         title.setFont(new Font("sans", Font.BOLD, 30));
-        title.setBounds(0, 10, 600, 50);
+        title.setBounds(10, 10, 600, 50);
     }
     
     
     void prepareSubtitle() {
         subtitle = new JLabel("Website");
-        subtitle.setBounds(0, 0, 100, 20);
+        subtitle.setBounds(10, 4, 100, 20);
     }
     
     void prepareStatus() {
         statusView = new JLabel();
-        statusView.setBounds(70, 0, 100, 20);
+        statusView.setBounds(80, 4, 100, 20);
     }
     
     void setOnlineStatus(boolean s) {

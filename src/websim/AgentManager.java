@@ -30,7 +30,7 @@ public class AgentManager {
         addSite("Google.com");
         addDevOps("Google.com");
             
-        for (int i=0; i<100; i++)
+        for (int i=0; i<30; i++)
             addUser("Google.com");
             
         addMaliciousUser("Google.com");

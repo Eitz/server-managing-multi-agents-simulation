@@ -33,7 +33,7 @@ public class LoadBalancer implements Server {
 
     public LoadBalancer(int i) {
         for (int x=0; x<i; x++)
-            this.computers.add(new Computer(Computer.ComputerSpecs.HIGH));
+            this.computers.add(new Computer(Computer.ComputerSpecs.i7));
     }
 
     @Override
@@ -111,7 +111,7 @@ public class LoadBalancer implements Server {
 
     @Override
     public boolean upgrade() {
-        Computer upgradeComputer = new Computer(Computer.ComputerSpecs.HIGH);
+        Computer upgradeComputer = new Computer(Computer.ComputerSpecs.i7);
         computers.add(upgradeComputer);
         return true;
     }
@@ -153,5 +153,15 @@ public class LoadBalancer implements Server {
             }
         }
         return userTasksCount;
+    }
+    
+    @Override
+    public ServerInformation[] getServerInformation() {
+        List<ServerInformation> infos = new ArrayList<>();
+        for (Computer c : computers) 
+            infos.add(new ServerInformation(c.specs.name(), c.processorUsage));
+        ServerInformation[] serverArr = new ServerInformation[infos.size()];
+        serverArr = infos.toArray(serverArr);
+        return serverArr;
     }
 }
