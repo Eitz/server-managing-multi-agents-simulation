@@ -2,6 +2,7 @@ package websim.agents.behaviours;
 
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
+import java.awt.Color;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,6 +41,10 @@ public class PeriodicSiteTasksBehaviour extends TickerBehaviour {
         void updateInterface() {
             agent.sitePanel.stats.setTasksCount(agent.computer.getTasksCount());            
             agent.sitePanel.console.setComputerInformation(agent.computer.getServerInformation());
+            if (agent.devOpsWatchers.size() > 0) {
+                agent.sitePanel.agents.getDevOpsPanel().setStatus("IDLE");
+                agent.sitePanel.agents.getDevOpsPanel().setConfiguration(agent.devOpsWatchers.get(0).getStringRepresentation(false));
+            }
         }
         
         void printConsoleInfo() {

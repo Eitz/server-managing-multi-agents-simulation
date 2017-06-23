@@ -39,7 +39,7 @@ public class DevOpsWatcher {
             alert = "max";
         }
         
-        if (alert != null && tick() >= maxTicks) {
+        if (alert != null && tick() > maxTicks) {
             resetTicks();
             return alert;
         }
@@ -55,6 +55,19 @@ public class DevOpsWatcher {
     
     void resetTicks() {
         spentTicks = 0;
+    }
+    
+    public String getStringRepresentation(boolean max) {
+        
+        String maximum;
+        if (max) {
+            maximum = String.valueOf(maxTicks);
+        } else {
+            maximum = String.valueOf(spentTicks);
+        }        
+        return "Max: " + maxProcessorUsage +
+                ", Min: " + minProcessorUsage +
+                ", " + maximum + "/" + maxTicks;
     }
 
     @Override

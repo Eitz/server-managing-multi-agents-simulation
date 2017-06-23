@@ -72,7 +72,7 @@ public class Computer implements Server {
     }
     
     @Override
-    public boolean addTask(WebTask task) {
+    public synchronized boolean addTask(WebTask task) {
         task.setProcessorUsage(getRandomProcessorUsage());
                 
         // Server overload

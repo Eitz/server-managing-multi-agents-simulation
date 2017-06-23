@@ -9,8 +9,10 @@ import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
+import java.awt.Color;
 import java.util.Random;
 import websim.agents.UserAgent;
+import websim.ui.UIManager;
 
 /**
  *
@@ -19,10 +21,12 @@ import websim.agents.UserAgent;
 public class AccessWebsiteBehaviour extends TickerBehaviour {
     
     private final UserAgent agent;
+    int removalTick;
 
     public AccessWebsiteBehaviour(Agent a, int repeatMs) {
         super(a, repeatMs);
         this.agent = (UserAgent) a;
+        removalTick = new Random().nextInt(3000);
     }
 
     boolean shouldAccessNow() {
@@ -32,23 +36,38 @@ public class AccessWebsiteBehaviour extends TickerBehaviour {
         return (rand.nextInt(oneIn) + 1) == oneIn;
     }
 
+    void removeFromUI() {
+        UIManager.getInstance()
+                .getSitePanel(agent.connectTo).users
+                .removeUser(agent.userPanel);
+    }
+    
     @Override
     public void onTick() {
-        if (getTickCount() > new Random().nextInt(5000)) {
+        if (getTickCount() > removalTick) {
+            removeFromUI();
             agent.doDelete();
             return;
         }
-        if (shouldAccessNow()) {
+        if (getTickCount() == 1 || shouldAccessNow()) {
             // System.out.println("[UserAgent("+ getLocalName() +")] I am accessing now!");
             ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
             msg.addReceiver(new AID(agent.connectTo, AID.ISLOCALNAME));
             msg.setLanguage("ENGLISH");
             msg.setOntology("user-access");
             msg.setContent(myAgent.getAID().getLocalName());
+            msg.setConversationId(getRandomConversationId());
             myAgent.send(msg);
+            agent.userPanel.addTask(msg.getConversationId(), "Connecting...", Color.black);
         } else {
             // System.out.println("[UserAgent("+ getLocalName() +")] Not accessing!");
         }
+    }
+
+    private String getRandomConversationId() {
+        return 
+            agent.getLocalName() + "task-" +
+            new Random().nextInt(100000);
     }
     
 }

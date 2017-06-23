@@ -29,21 +29,38 @@ public class AgentManager {
         
         addSite("Google.com");
         addDevOps("Google.com");
-            
-        for (int i=0; i<30; i++)
-            addUser("Google.com");
-            
-        addMaliciousUser("Google.com");
         addSecurityAgent("Google.com");
         
         addSite("Yahoo.com");
         addDevOps("Yahoo.com");
-            
-        for (int i=0; i<100; i++)
-            addUser("Yahoo.com");
-            
-        addMaliciousUser("Yahoo.com");
         addSecurityAgent("Yahoo.com");
+        
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(AgentManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        addMaliciousUser();
+        
+        int malicious = 50;
+        while(true) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(AgentManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            malicious--;
+            addUser();
+            if (malicious==0) {
+                addMaliciousUser();
+                malicious=50;
+            }
+            if (new Random().nextInt(100) < 10) {
+                addBurstOfUsers();
+            }
+            
+        }
     }
     
     void initJade(boolean showGui) {
@@ -93,10 +110,23 @@ public class AgentManager {
         addAgent("SecurityAgent-" + connectTo, "websim.agents.SecurityAgent", agentArgs);
     }
 
+    public void addMaliciousUser() {
+        Random rand = new Random();
+        String site = sites.get(rand.nextInt(sites.size()));
+        addMaliciousUser(site);
+    }
+    
     public void addUser() {
         Random rand = new Random();
         String site = sites.get(rand.nextInt(sites.size()));
         addUser(site);
+    }
+    
+    void addBurstOfUsers() {
+        Random rand = new Random();
+        String site = sites.get(rand.nextInt(sites.size()));
+        for (int i=0; i<new Random().nextInt(30); i++)
+            addUser(site);
     }
 
     

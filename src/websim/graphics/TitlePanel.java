@@ -41,19 +41,20 @@ public final class TitlePanel extends JPanel {
     
     void prepareTitle() {
         title = new JLabel(this.site);
-        title.setFont(new Font("sans", Font.BOLD, 30));
-        title.setBounds(10, 10, 600, 50);
+        title.setFont(new Font("sans", Font.BOLD, 28));
+        title.setBounds(10, 15, 600, title.getPreferredSize().height);
     }
     
     
     void prepareSubtitle() {
         subtitle = new JLabel("Website");
-        subtitle.setBounds(10, 4, 100, 20);
+        subtitle.setBounds(10, 2, 100, 20);
     }
     
     void prepareStatus() {
         statusView = new JLabel();
-        statusView.setBounds(80, 4, 100, 20);
+        statusView.setFont(new Font("monospaced", Font.BOLD, 11));
+        statusView.setBounds(80, 2, 100, 20);
     }
     
     void setOnlineStatus(boolean s) {

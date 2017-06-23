@@ -3,10 +3,16 @@ package websim.agents.behaviours;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
+import java.awt.Color;
 import java.math.BigDecimal;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import websim.components.DevOpsWatcher;
 import websim.components.SecurityWatcher;
 import websim.agents.SiteAgent;
+import websim.graphics.UserPanel;
+import websim.ui.UIManager;
 
 public class GetSiteMessagesBehaviour extends CyclicBehaviour {
 
@@ -50,17 +56,41 @@ public class GetSiteMessagesBehaviour extends CyclicBehaviour {
     void handleUserAccessMessage(ACLMessage msg) {
         String user = msg.getContent();
         ACLMessage reply = msg.createReply();
-        boolean taskAccepted = agent.receiveTask(user, msg.getConversationId());
-        if (taskAccepted) {
-            reply.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
-            reply.setOntology("task-status");
-            reply.setContent(msg.getConversationId());
-        } else {
-            reply.setPerformative(ACLMessage.FAILURE);
-            reply.setOntology("task-status");
-            reply.setContent(msg.getConversationId());
-        }
-        agent.send(reply);
+        
+        Thread thread = new Thread(() -> {
+            try {
+                Thread.sleep(new Random().nextInt(2000));
+            } catch (InterruptedException ex) {
+                Logger.getLogger(GetSiteMessagesBehaviour.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            boolean taskAccepted = agent.receiveTask(user, msg.getConversationId());
+            if (taskAccepted) {
+                reply.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+                reply.setOntology("task-status");
+                reply.setContent(msg.getConversationId());
+                UserPanel up = UIManager
+                        .getInstance()
+                        .getSitePanel(agent.getLocalName())
+                        .users.getUserPanel(user);
+                if (up != null)
+                    up.updateTask(msg.getConversationId(), "Waiting...", Color.blue);
+            } else {
+                reply.setPerformative(ACLMessage.FAILURE);
+                reply.setOntology("task-status");
+                if (!agent.firewall.checkIfOk(user))
+                    reply.setContent("ban");
+                else
+                    reply.setContent(msg.getConversationId());
+                UserPanel up = UIManager
+                        .getInstance()
+                        .getSitePanel(agent.getLocalName())
+                        .users.getUserPanel(user);
+                if (up != null)
+                    up.updateTask(msg.getConversationId(), "500 ERR", Color.red);
+            }
+            agent.send(reply);
+        });
+        thread.start();
     }
 
     void handleDevOpsAlterComputer(ACLMessage msg) {
@@ -68,6 +98,7 @@ public class GetSiteMessagesBehaviour extends CyclicBehaviour {
         String action = msg.getContent();
         agent.performDevOpsAction(action);
         ACLMessage reply = msg.createReply();
+        
         reply.setPerformative(ACLMessage.AGREE);
         reply.setOntology("devops-alter-computer");
         reply.setContent("1");
@@ -87,7 +118,9 @@ public class GetSiteMessagesBehaviour extends CyclicBehaviour {
         BigDecimal max = new BigDecimal(minMax[1]);
 
         DevOpsWatcher watcher = new DevOpsWatcher(msg.getSender().getLocalName(), min, max, ticks);
+        
         agent.addDevOpsWatcher(watcher);
+        agent.sitePanel.agents.getDevOpsPanel().setStatus("Connecting...");
 
         ACLMessage reply = msg.createReply();
         reply.setPerformative(ACLMessage.ACCEPT_PROPOSAL);

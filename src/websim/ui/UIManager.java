@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import websim.AgentManager;
 import websim.graphics.ContentPanel;
-import websim.graphics.SitePanelGraphic;
+import websim.graphics.SitePanel;
 
 /**
  *
@@ -29,7 +29,7 @@ public final class UIManager extends JFrame {
     private static UIManager instance;
     private static AgentManager agentManager;
     
-    private static final List<SitePanelGraphic> sitePanels = new ArrayList<SitePanelGraphic>();
+    private static final List<SitePanel> sitePanels = new ArrayList<SitePanel>();
     
     synchronized public static UIManager getInstance() {
         if (instance == null) instance = new UIManager();
@@ -47,7 +47,7 @@ public final class UIManager extends JFrame {
     }
 
     void prepareGUI() {
-        Dimension size = new Dimension(1200,700);
+        Dimension size = new Dimension(1200,710);
         setSize(size);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -89,11 +89,19 @@ public final class UIManager extends JFrame {
         return buttonsBar;
     }
     
-    public void addSite(SitePanelGraphic sitePanel) {
+    public void addSite(SitePanel sitePanel) {
         System.out.println("OK, TRYING TO ADD!");
         sitePanels.add(sitePanel);
-        sitePanel.setBounds((sitePanels.size()-1) * 600, 0, 600, 700);
+        sitePanel.setBounds((sitePanels.size()-1) * 600, 0, 600, 710);
         getContentPanel().add(sitePanel);
         sitePanel.repaint();
+    }
+    
+    public SitePanel getSitePanel(String site) {
+        for (SitePanel s : sitePanels) {
+            if (s.site.equals(site)) 
+                return s;
+        }
+        return null;
     }
 }

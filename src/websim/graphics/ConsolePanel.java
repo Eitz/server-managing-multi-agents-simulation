@@ -8,13 +8,10 @@ package websim.graphics;
 import java.awt.Color;
 import java.awt.Font;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
-import sun.awt.X11.XConstants;
-import websim.components.Server;
 import websim.components.ServerInformation;
 
 /**
@@ -56,14 +53,14 @@ public class ConsolePanel extends BlockPanel {
             JLabel computer = new JLabel(serverInfo.name);
             computer.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
             computer.setForeground(Color.cyan);
-            computer.setBounds(20, 50 + 20 * i, 30, 20);
+            computer.setBounds(20, 30 + 20 * i, 30, 20);
             add(computer);
             computers.add(computer);
             
             JLabel processorUsage = new JLabel(prepareCPUText(serverInfo.processorUsage));
             processorUsage.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
             processorUsage.setForeground(Color.white);
-            processorUsage.setBounds(50, 50 + 20 * i, 280, 20);
+            processorUsage.setBounds(50, 30 + 20 * i, 280, 20);
             add(processorUsage);
             processorUsages.add(processorUsage);    
         }
@@ -81,13 +78,18 @@ public class ConsolePanel extends BlockPanel {
         }
         if (bars == 25) {
             sb.deleteCharAt(sb.lastIndexOf("|"));
+            sb.deleteCharAt(sb.lastIndexOf("|"));
         }
         int padding = 25 - bars;
         for (int i = 0; i < padding; i++) {
             sb.append(" ");
         }
+        if (bars != 25 && bars > 2) {
+            sb.deleteCharAt(sb.lastIndexOf(" "));
+        }
         
-        sb.append(count.toString());
+        
+        sb.append(String.valueOf(count.intValue()));
         sb.append("%");
         sb.append("]");
         return sb.toString();

@@ -5,6 +5,7 @@ import websim.components.WebTask;
 
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import websim.components.Computer;
@@ -15,12 +16,13 @@ import websim.components.SecurityWatcher;
 import websim.components.Server;
 import websim.agents.behaviours.GetSiteMessagesBehaviour;
 import websim.agents.behaviours.PeriodicSiteTasksBehaviour;
-import websim.graphics.SitePanelGraphic;
+import websim.graphics.SitePanel;
+import websim.graphics.UserPanel;
 import websim.ui.UIManager;
 
 public class SiteAgent extends Agent {
 
-    public SitePanelGraphic sitePanel;
+    public SitePanel sitePanel;
     
     public Server computer = new Computer(Computer.ComputerSpecs.i3);
     public Firewall firewall = null;
@@ -49,7 +51,16 @@ public class SiteAgent extends Agent {
         msg.addReceiver(new AID(task.user, AID.ISLOCALNAME));
         msg.setLanguage("ENGLISH");
         msg.setOntology("task-reply");
-        msg.setContent(task.id);
+        if (firewall.checkIfOk(task.user))
+            msg.setContent(task.id);
+        else
+            msg.setContent("ban");
+        UserPanel userPanel = UIManager
+            .getInstance()
+            .getSitePanel(getLocalName())
+            .users.getUserPanel(task.user);
+        if (userPanel != null)
+            userPanel.updateTask(task.id, "200 OK", Color.GREEN);
         this.send(msg);
     }
     
@@ -72,6 +83,8 @@ public class SiteAgent extends Agent {
         msg.setContent(limit);
         this.send(msg);
         System.out.println("DevOpsInformed: ("+ limit +")" + devOpsWatcher);
+        sitePanel.agents.getDevOpsPanel().setStatus("ALERT!", Color.RED);
+        sitePanel.agents.getDevOpsPanel().setConfiguration(devOpsWatchers.get(0).getStringRepresentation(true));
     }
     
     public void performDevOpsAction(String action) {
@@ -83,12 +96,19 @@ public class SiteAgent extends Agent {
                 if (!successUpgrade)
                     computer = new LoadBalancer(2);
             }
+            
+            if (successUpgrade) {
+                sitePanel.agents.getDevOpsPanel().setStatus("Upgrading!", Color.green);
+            }
         }
         if (action.equals("degrade")) {
             // FIX HERE, send task-failed to all users in the degraded computer
             boolean successDegrade = computer.degrade();
             if (!successDegrade && computer.isCluster()){
                 computer = new Computer(Computer.ComputerSpecs.i7);
+            }
+            if (successDegrade) {
+                sitePanel.agents.getDevOpsPanel().setStatus("Degrading!", Color.green);
             }
         }
     }
@@ -106,8 +126,6 @@ public class SiteAgent extends Agent {
     }
     
     public void performSecurityAction(String action, String user) {
-        System.out.println("SECURITY --> " + action);
-        System.out.println("Action --> " + action);
         if (action.equals("ban")) {
             firewall.addRuleBlockUser(user);
             // FIX HERE: add task failed to all tasks of this user
@@ -121,7 +139,7 @@ public class SiteAgent extends Agent {
     protected void setup () {
         addBehaviour(new GetSiteMessagesBehaviour(this));
         addBehaviour(new PeriodicSiteTasksBehaviour(this, refreshTime));
-        sitePanel = new SitePanelGraphic(this);
+        sitePanel = new SitePanel(this);
         UIManager.getInstance().addSite(sitePanel);
     }
 }

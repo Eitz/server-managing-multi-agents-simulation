@@ -5,11 +5,8 @@
  */
 package websim.graphics;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import javax.swing.JPanel;
 import websim.agents.SiteAgent;
 
@@ -17,32 +14,32 @@ import websim.agents.SiteAgent;
  *
  * @author eitz
  */
-public class SitePanelGraphic extends JPanel {
+public class SitePanel extends JPanel {
     
     SiteAgent agent;
     TitlePanel title;
     
+    public String site;
+    
     public StatsPanel stats;
     public ConsolePanel console;
-    public BlockPanel machines;
-    public BlockPanel agents;
-    public BlockPanel applications;
-    public BlockPanel users;
-    public BlockPanel log;
+    public AgentsPanel agents;
+    public UsersPanel users;
+    public LogPanel log;
     
-    public SitePanelGraphic(SiteAgent myAgent) {
+    public SitePanel(SiteAgent myAgent) {
         this.agent = myAgent;
-        setSize(new Dimension(600, 700));
+        this.site = agent.getLocalName();
+        setSize(new Dimension(600, 710));
         setLayout(null);
         setBackground(Color.DARK_GRAY);
         prepareTitle();
         prepareBlocks();        
-        
     }
 
     private void prepareTitle() {
-        title = new TitlePanel(agent.getLocalName());
-        title.setBounds(0, 0, getWidth(), 55);
+        title = new TitlePanel(this.site);
+        title.setBounds(0, 0, getWidth(), 49);
         add(title);
     }
     
@@ -61,22 +58,17 @@ public class SitePanelGraphic extends JPanel {
         console.setBounds(300, 0, 300, 300);
         wrapper.add(console);
         
-        agents = new StatsPanel();
-        agents.setBounds(0, 150, 300, 150);
-        wrapper.add(agents);
-        
-        applications = new StatsPanel();
-        applications.setBounds(0, 300, 300, 150);
-        wrapper.add(applications);
-                
-        log = new StatsPanel();
-        log.setBounds(300, 300, 300, 150);
+        log = new LogPanel();
+        log.setBounds(0, 150, 300, 300);
         wrapper.add(log);
         
-        users = new StatsPanel();
-        users.setBounds(0, 450, 600, 150);
-        wrapper.add(users);
+        agents = new AgentsPanel(this.agent.getLocalName());
+        agents.setBounds(300, 300, 300, 150);
+        wrapper.add(agents);
         
+        users = new UsersPanel();
+        users.setBounds(0, 450, 600, 210);
+        wrapper.add(users);
         add(wrapper);
     }
 }

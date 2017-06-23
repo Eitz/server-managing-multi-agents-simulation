@@ -4,6 +4,7 @@ import jade.core.Agent;
 import websim.agents.behaviours.GetDevOpsMessagesBehaviour;
 
 public class DevOpsAgent extends Agent {
+    
     String connectTo = "";
     String parameters = "20-80:5";
 

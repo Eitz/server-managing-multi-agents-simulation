@@ -40,16 +40,16 @@ public final class StatsPanel extends BlockPanel {
         countText = new JLabel(String.valueOf(this.count));
         countText.setFont(new Font("sans", Font.BOLD, 40));
         countText.setBounds(
-                this.getWidth() / 2 - countText.getWidth() / 2 - 20,
+                this.getWidth() / 2 - countText.getWidth() / 2 - 33,
                 60, 600, 50);
     }
     
     
     void prepareStrings() {
         upperText = new JLabel("Right now");
-        upperText.setBounds(this.getWidth() / 2 - 25, 40, 100, 20);
+        upperText.setBounds(this.getWidth() / 2 - 45, 40, 100, 20);
         bottomText = new JLabel("Active tasks running on site");
-        bottomText.setBounds(this.getWidth() / 2 - 80, 105, 200, 20);
+        bottomText.setBounds(this.getWidth() / 2 - 90, 105, 200, 20);
     }
     
     final public void setTasksCount(int c) {
