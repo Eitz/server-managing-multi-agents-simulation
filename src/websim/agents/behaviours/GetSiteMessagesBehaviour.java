@@ -12,7 +12,7 @@ import websim.components.DevOpsWatcher;
 import websim.components.SecurityWatcher;
 import websim.agents.SiteAgent;
 import websim.graphics.UserPanel;
-import websim.ui.UIManager;
+import websim.UIManager;
 
 public class GetSiteMessagesBehaviour extends CyclicBehaviour {
 
@@ -87,6 +87,12 @@ public class GetSiteMessagesBehaviour extends CyclicBehaviour {
                         .users.getUserPanel(user);
                 if (up != null)
                     up.updateTask(msg.getConversationId(), "500 ERR", Color.red);
+                agent.sitePanel.log.append(
+                    user,
+                    "Error (" + (agent.firewall.checkIfOk(user) ? "TOO MANY TASKS" : "BANNED") + ")",
+                    agent.firewall.checkIfOk(user) ? Color.GRAY : Color.RED,
+                    agent.firewall.checkIfOk(user) ? Color.BLACK : Color.RED
+                );
             }
             agent.send(reply);
         });
@@ -94,10 +100,12 @@ public class GetSiteMessagesBehaviour extends CyclicBehaviour {
     }
 
     void handleDevOpsAlterComputer(ACLMessage msg) {
-        System.out.println("Received message from devops: " + msg.getOntology());
         String action = msg.getContent();
         agent.performDevOpsAction(action);
         ACLMessage reply = msg.createReply();
+        
+        agent.sitePanel.log.append("DevOps", "Changing computer: (" + action.toUpperCase() +")", Color.BLUE, Color.black);
+        agent.sitePanel.agents.getDevOpsPanel().setActive();
         
         reply.setPerformative(ACLMessage.AGREE);
         reply.setOntology("devops-alter-computer");
@@ -121,6 +129,8 @@ public class GetSiteMessagesBehaviour extends CyclicBehaviour {
         
         agent.addDevOpsWatcher(watcher);
         agent.sitePanel.agents.getDevOpsPanel().setStatus("Connecting...");
+        agent.sitePanel.agents.getDevOpsPanel().setActive();
+        agent.sitePanel.log.append("DevOps", "connected!", Color.BLUE, Color.black);
 
         ACLMessage reply = msg.createReply();
         reply.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
@@ -140,6 +150,10 @@ public class GetSiteMessagesBehaviour extends CyclicBehaviour {
         SecurityWatcher watcher = new SecurityWatcher(msg.getSender().getLocalName(), maxSimultaneousTask);
         agent.addSecurityWatcher(watcher);
 
+        agent.sitePanel.agents.getSecPanel().setStatus("Connecting...");
+        agent.sitePanel.agents.getSecPanel().setActive();
+        agent.sitePanel.log.append("SecurityAgent", "connected!", Color.BLUE, Color.black);
+        
         ACLMessage reply = msg.createReply();
         reply.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
         reply.setOntology(msg.getOntology());
@@ -155,6 +169,12 @@ public class GetSiteMessagesBehaviour extends CyclicBehaviour {
         String user = splittedMessage[1];
         agent.performSecurityAction(action, user);
 
+        agent.sitePanel
+            .agents.getSecPanel()
+            .setStatus("New BAN!", Color.RED);
+        agent.sitePanel.agents.getSecPanel().setActive();
+        agent.sitePanel.log.append("SecurityAgent", "Time to BAN: (" + user + ")", Color.BLUE, Color.BLACK);
+        
         ACLMessage reply = msg.createReply();
         reply.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
         reply.setOntology(msg.getOntology());

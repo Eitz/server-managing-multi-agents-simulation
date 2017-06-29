@@ -1,12 +1,13 @@
 package websim.agents;
 
+import websim.agents.behaviours.RegisterWatchWebSiteBehaviour;
 import jade.core.Agent;
 import websim.agents.behaviours.GetDevOpsMessagesBehaviour;
 
 public class DevOpsAgent extends Agent {
     
-    String connectTo = "";
-    String parameters = "20-80:5";
+    public String connectTo = "";
+    public String parameters = "20-80:5";
 
     void getArgs() {
         Object[] args = getArguments();

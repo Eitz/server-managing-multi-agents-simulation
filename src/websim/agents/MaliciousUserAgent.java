@@ -9,8 +9,7 @@ import java.util.Random;
 import websim.graphics.LogPanel;
 import websim.graphics.SitePanel;
 import websim.graphics.UserPanel;
-import websim.graphics.UsersPanel;
-import websim.ui.UIManager;
+import websim.UIManager;
 
 public class MaliciousUserAgent extends Agent {
     
@@ -25,11 +24,11 @@ public class MaliciousUserAgent extends Agent {
         if (args != null && args.length > 0) {
             connectTo = (String) args[0];
         } else {
-            throw new Error("UserAgent must receive at least 1 website to connectTo!");
+            throw new Error("must receive at least 1 website to connectTo!");
         }        
         addToUsersPanel();
         logPanel.append(getLocalName(), "attacking site!", Color.RED, Color.RED);
-        addBehaviour(new AccessWebsiteBehaviour(this, 200));
+        addBehaviour(new AccessWebsiteBehaviour(this, 300));
     }
     
     void addToUsersPanel() {
@@ -83,8 +82,7 @@ public class MaliciousUserAgent extends Agent {
             if (msg == null) {
                return false; 
             } else {
-                System.out.println("MESSAGE -> " + msg.getContent());
-               return msg.getContent().contains("ban");
+                return msg.getContent().contains("ban");
             }
         }
         

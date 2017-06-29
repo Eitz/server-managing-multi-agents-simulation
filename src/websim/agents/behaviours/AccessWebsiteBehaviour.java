@@ -12,7 +12,7 @@ import jade.lang.acl.ACLMessage;
 import java.awt.Color;
 import java.util.Random;
 import websim.agents.UserAgent;
-import websim.ui.UIManager;
+import websim.UIManager;
 
 /**
  *
@@ -26,7 +26,7 @@ public class AccessWebsiteBehaviour extends TickerBehaviour {
     public AccessWebsiteBehaviour(Agent a, int repeatMs) {
         super(a, repeatMs);
         this.agent = (UserAgent) a;
-        removalTick = new Random().nextInt(3000);
+        removalTick = 15 + new Random().nextInt(45);
     }
 
     boolean shouldAccessNow() {

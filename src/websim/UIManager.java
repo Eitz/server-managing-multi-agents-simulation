@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package websim.ui;
+package websim;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -26,11 +26,12 @@ import websim.graphics.SitePanel;
 
 public final class UIManager extends JFrame {
     
-    private static UIManager instance;
+    
     private static AgentManager agentManager;
     
     private static final List<SitePanel> sitePanels = new ArrayList<SitePanel>();
     
+    private static UIManager instance;
     synchronized public static UIManager getInstance() {
         if (instance == null) instance = new UIManager();
         return instance;
@@ -90,7 +91,6 @@ public final class UIManager extends JFrame {
     }
     
     public void addSite(SitePanel sitePanel) {
-        System.out.println("OK, TRYING TO ADD!");
         sitePanels.add(sitePanel);
         sitePanel.setBounds((sitePanels.size()-1) * 600, 0, 600, 710);
         getContentPanel().add(sitePanel);

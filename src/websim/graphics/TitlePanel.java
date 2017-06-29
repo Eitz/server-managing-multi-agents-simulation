@@ -7,8 +7,11 @@ package websim.graphics;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 import javax.swing.*;
+import websim.AgentManager;
+import websim.UIManager;
 
 /**
  *
@@ -22,6 +25,8 @@ public final class TitlePanel extends JPanel {
     JLabel title;
     JLabel subtitle;
     JLabel statusView;
+    JButton buttonAddUsers;
+    JButton buttonAddMalUser;
     
     public TitlePanel(String site) {
         this.site = site;
@@ -29,12 +34,15 @@ public final class TitlePanel extends JPanel {
         setBackground(Color.LIGHT_GRAY);
         prepareTitle();
         prepareSubtitle();
-        prepareStatus();        
+        prepareStatus();
+        prepareButtons();
         setOnlineStatus(true);
         
         add(subtitle);
         add(statusView);
         add(title);
+        add(buttonAddUsers);
+        add(buttonAddMalUser);
         
         repaint();
     }
@@ -61,11 +69,37 @@ public final class TitlePanel extends JPanel {
         onlineStatus = s;
         if (onlineStatus) {
             statusView.setText("online");
-            statusView.setForeground(Color.green);
+            statusView.setForeground(Color.BLACK);
         } else {
             statusView.setForeground(Color.red);
             statusView.setText("offline");
         }
         statusView.repaint();
+    }
+    
+    void prepareButtons() {
+        int leftBasePx = 465;
+        buttonAddUsers = new JButton("Add 30 users");
+        buttonAddUsers.setBounds(
+            leftBasePx,
+            15,
+            buttonAddUsers.getPreferredSize().width,
+            buttonAddUsers.getPreferredSize().height
+        );
+        buttonAddUsers.addActionListener((ActionEvent ae) -> {
+            for (int i=0; i<30; i++)
+                AgentManager.getInstance().addUser(site);            
+        });
+        
+        buttonAddMalUser = new JButton("Add MaliciousUser");
+        buttonAddMalUser.setBounds(
+            leftBasePx - buttonAddMalUser.getPreferredSize().width - 10,
+            15,
+            buttonAddMalUser.getPreferredSize().width,
+            buttonAddMalUser.getPreferredSize().height
+        );
+        buttonAddMalUser.addActionListener((ActionEvent ae) -> {
+            AgentManager.getInstance().addMaliciousUser(site);          
+        });
     }
 }

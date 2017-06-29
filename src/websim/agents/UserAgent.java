@@ -2,11 +2,11 @@ package websim.agents;
 
 import websim.agents.behaviours.AccessWebsiteBehaviour;
 import jade.core.Agent;
+import java.awt.Color;
 import websim.graphics.LogPanel;
 import websim.graphics.SitePanel;
 import websim.graphics.UserPanel;
-import websim.graphics.UsersPanel;
-import websim.ui.UIManager;
+import websim.UIManager;
 
 public class UserAgent extends Agent {
     
@@ -23,7 +23,7 @@ public class UserAgent extends Agent {
             throw new Error("UserAgent must receive at least 1 website to connectTo!");
         }
         addToUsersPanel();
-        logPanel.append(getLocalName(), "connected!");
+        logPanel.append(getLocalName(), "connected!", Color.GRAY, Color.BLACK);
         addBehaviour(new AccessWebsiteBehaviour(this, 2000));
     }
     

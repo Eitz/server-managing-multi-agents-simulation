@@ -3,12 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package websim.agents;
+package websim.agents.behaviours;
 
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
+import websim.agents.DevOpsAgent;
 
 /**
  *
@@ -18,7 +19,7 @@ public class RegisterWatchWebSiteBehaviour extends OneShotBehaviour {
     
     DevOpsAgent agent;
 
-    RegisterWatchWebSiteBehaviour(Agent a) {
+    public RegisterWatchWebSiteBehaviour(Agent a) {
         super(a);
         agent = (DevOpsAgent) a;
     }

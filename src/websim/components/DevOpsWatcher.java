@@ -5,7 +5,6 @@
  */
 package websim.components;
 
-import websim.components.Server;
 import java.math.BigDecimal;
 
 /**
@@ -13,6 +12,7 @@ import java.math.BigDecimal;
  * @author eitz
  */
 public class DevOpsWatcher {
+    
     public String devOpsName;
     public BigDecimal minProcessorUsage;
     public BigDecimal maxProcessorUsage;

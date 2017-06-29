@@ -20,7 +20,7 @@ public class Computer implements Server {
     BigDecimal processorUsage = new BigDecimal(0).setScale(2, RoundingMode.HALF_EVEN);
     float processorIncrementsMin;
     float processorIncrementsMax;
-    Map<String, List<WebTask>> currentUsers = new HashMap<>();
+    volatile Map<String, List<WebTask>> currentUsers = new HashMap<>();
     ComputerSpecs specs;
     
     public Computer(ComputerSpecs specs) {
@@ -44,14 +44,14 @@ public class Computer implements Server {
     private void defineProcessorSpeed() {
         switch (specs) {
             case i7:
-                processorIncrementsMin = 0.1f;
-                processorIncrementsMax = 2f;
-            case i5:
-                processorIncrementsMin = 0.3f;
-                processorIncrementsMax = 3f;
-            case i3:
                 processorIncrementsMin = 0.5f;
-                processorIncrementsMax = 5f;  
+                processorIncrementsMax = 3f;
+            case i5:
+                processorIncrementsMin = 1f;
+                processorIncrementsMax = 6f;
+            case i3:
+                processorIncrementsMin = 1.5f;
+                processorIncrementsMax = 10f;  
         }
     }
 

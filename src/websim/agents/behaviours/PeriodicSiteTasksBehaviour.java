@@ -2,7 +2,6 @@ package websim.agents.behaviours;
 
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
-import java.awt.Color;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,6 +43,12 @@ public class PeriodicSiteTasksBehaviour extends TickerBehaviour {
             if (agent.devOpsWatchers.size() > 0) {
                 agent.sitePanel.agents.getDevOpsPanel().setStatus("IDLE");
                 agent.sitePanel.agents.getDevOpsPanel().setConfiguration(agent.devOpsWatchers.get(0).getStringRepresentation(false));
+                agent.sitePanel.agents.getDevOpsPanel().setInactive();
+            }
+            if (agent.securityWatchers.size() > 0) {
+                agent.sitePanel.agents.getSecPanel().setStatus("IDLE");
+                agent.sitePanel.agents.getSecPanel().setInactive();
+                agent.sitePanel.agents.getSecPanel().setConfiguration(agent.securityWatchers.get(0).getStringRepresentation(false));
             }
         }
         
@@ -83,7 +88,7 @@ public class PeriodicSiteTasksBehaviour extends TickerBehaviour {
 
         @Override
         public void onTick() {
-            printConsoleInfo();
+            // printConsoleInfo();
             updateInterface();
             checkForDevOpsAlerts();
             checkForSecurityAlerts();

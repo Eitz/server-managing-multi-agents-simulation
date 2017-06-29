@@ -18,7 +18,7 @@ import websim.agents.behaviours.GetSiteMessagesBehaviour;
 import websim.agents.behaviours.PeriodicSiteTasksBehaviour;
 import websim.graphics.SitePanel;
 import websim.graphics.UserPanel;
-import websim.ui.UIManager;
+import websim.UIManager;
 
 public class SiteAgent extends Agent {
 
@@ -77,13 +77,13 @@ public class SiteAgent extends Agent {
         ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
         msg.addReceiver(new AID(devOpsWatcher.devOpsName, AID.ISLOCALNAME));
         msg.setLanguage("ENGLISH");
-        // String ontology = computer.isCluster() ? "devops-alert-cluster" : "devops-alert-server";
         String ontology = "devops-server-alert";
         msg.setOntology(ontology);
         msg.setContent(limit);
         this.send(msg);
-        System.out.println("DevOpsInformed: ("+ limit +")" + devOpsWatcher);
+        sitePanel.log.append("DevOps", "Received alert - " + limit, Color.blue, Color.red);
         sitePanel.agents.getDevOpsPanel().setStatus("ALERT!", Color.RED);
+        sitePanel.agents.getDevOpsPanel().setActive();
         sitePanel.agents.getDevOpsPanel().setConfiguration(devOpsWatchers.get(0).getStringRepresentation(true));
     }
     
@@ -122,7 +122,9 @@ public class SiteAgent extends Agent {
         msg.setOntology(ontology);
         msg.setContent(maliciousUser);
         this.send(msg);
-        System.out.println("SecurityAgent informed: ("+ maliciousUser +")" + secWatcher.getName());
+        sitePanel.agents.getSecPanel().setActive();
+        sitePanel.agents.getSecPanel().setStatus("ALERT!", Color.RED);
+        sitePanel.log.append("SecurityAgent ", "Received alert ("+ maliciousUser +")", Color.blue, Color.red);
     }
     
     public void performSecurityAction(String action, String user) {

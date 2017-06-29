@@ -71,7 +71,7 @@ public class UserPanel extends JPanel {
     
     public void addTask(String id, String text, Color color) {
         JLabel newTask = new JLabel(text);
-        newTask.setFont(new Font("sans", Font.ITALIC, 7));
+        newTask.setFont(new Font("sans", Font.PLAIN, 7));
         newTask.setToolTipText(id);
         newTask.setForeground(color);
         tasksLabels.add(0, newTask);

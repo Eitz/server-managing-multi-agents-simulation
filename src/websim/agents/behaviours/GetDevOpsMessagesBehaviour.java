@@ -25,7 +25,7 @@ public class GetDevOpsMessagesBehaviour extends CyclicBehaviour {
             return;
         }
         
-        System.out.println("DevOpsReceived Message: " + msg.getOntology());
+        // System.out.println("DevOpsReceived Message: " + msg.getOntology());
 
         switch (msg.getOntology()) {
             case "devops-server-alert":

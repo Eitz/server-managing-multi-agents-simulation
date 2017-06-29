@@ -41,6 +41,18 @@ public class AgentPanel extends JPanel {
         repaint();        
     }  
     
+    public void setActive() {
+        titleLabel.setForeground(Color.WHITE);
+        configLabel.setForeground(Color.WHITE);
+        setBackground(Color.DARK_GRAY);
+    }
+    
+    public void setInactive() {
+        titleLabel.setForeground(Color.BLUE);
+        configLabel.setForeground(Color.BLACK);
+        setBackground(Color.WHITE);
+    }
+    
     final void prepare() {
         setLayout(null);
         setSize(new Dimension(125, 95));
@@ -85,6 +97,7 @@ public class AgentPanel extends JPanel {
     
     final void prepareTitle() {
         titleLabel = new JLabel(this.title);
+        titleLabel.setForeground(Color.BLUE);
         titleLabel.setFont(new Font("sans", Font.BOLD, 11));
         titleLabel.setBounds(
             this.getWidth() / 2 - titleLabel.getPreferredSize().width / 2,

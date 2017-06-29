@@ -5,7 +5,6 @@
  */
 package websim.components;
 
-import websim.components.Server;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +39,7 @@ public class SecurityWatcher {
     }
     
     public boolean isAbuser(String user, int tasksQuantity) {
-        return tasksQuantity > maxSimultaneousTask ? true : false;
+        return tasksQuantity > maxSimultaneousTask;
     }
     
     @Override
@@ -54,6 +53,10 @@ public class SecurityWatcher {
 
     public String getName() {
         return securityAgentName;
+    }
+
+    public String getStringRepresentation(boolean b) {
+        return "Max simultan. tasks: " + maxSimultaneousTask;
     }
     
 }

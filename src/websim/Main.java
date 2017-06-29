@@ -1,6 +1,5 @@
 package websim;
 
-import websim.ui.UIManager;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,7 +11,7 @@ public class Main {
         
         setupLog();
         UIManager uiManager = UIManager.getInstance();
-        AgentManager agentManager = new AgentManager();
+        AgentManager agentManager = AgentManager.getInstance();
         agentManager.setup(showJadeGui);
         uiManager.setAgentManager(agentManager);
     }

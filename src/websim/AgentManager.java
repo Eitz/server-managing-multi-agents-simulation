@@ -14,6 +14,12 @@ import java.util.logging.Logger;
 
 public class AgentManager {
     
+    private static AgentManager instance;
+    synchronized public static AgentManager getInstance() {
+        if (instance == null) instance = new AgentManager();
+        return instance;
+    }
+    
     Runtime jadeRuntime;
     AgentContainer myContainer;
     
@@ -43,20 +49,22 @@ public class AgentManager {
         
         addMaliciousUser();
         
-        int malicious = 50;
+        int maliciousRespawn = 30;
+        int maliciousCount = maliciousRespawn;
+        
         while(true) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500 + new Random().nextInt(500));
             } catch (InterruptedException ex) {
                 Logger.getLogger(AgentManager.class.getName()).log(Level.SEVERE, null, ex);
             }
-            malicious--;
+            maliciousCount--;
             addUser();
-            if (malicious==0) {
+            if (maliciousCount==0) {
                 addMaliciousUser();
-                malicious=50;
+                maliciousCount=maliciousRespawn;
             }
-            if (new Random().nextInt(100) < 10) {
+            if (new Random().nextInt(100) < 15) {
                 addBurstOfUsers();
             }
             
@@ -95,7 +103,7 @@ public class AgentManager {
         addAgent("User-" + userId++, "websim.agents.UserAgent", agentArgs);
     }
     
-    void addMaliciousUser(String connectTo) {
+    public void addMaliciousUser(String connectTo) {
         String[] agentArgs = new String[] { connectTo };
         addAgent("MaliciousUser-" + userId++, "websim.agents.MaliciousUserAgent", agentArgs);        
     }
@@ -106,7 +114,7 @@ public class AgentManager {
     }
     
     void addSecurityAgent(String connectTo) {
-        String[] agentArgs = new String[] { connectTo, "20" };
+        String[] agentArgs = new String[] { connectTo, "10" };
         addAgent("SecurityAgent-" + connectTo, "websim.agents.SecurityAgent", agentArgs);
     }
 
